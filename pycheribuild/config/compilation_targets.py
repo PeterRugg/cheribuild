@@ -186,6 +186,9 @@ class _ClangBasedTargetInfo(TargetInfo, metaclass=ABCMeta):
             result.append("-mabi=" + cls.get_riscv_abi(xtarget, softfloat=softfloat))
             result.append("-mno-relax")  # Linker relaxations are not supported with clang+lld
 
+            if xtarget.is_cheri_hybrid() or xtarget.is_cheri_purecap():
+                result.append("-mxcheri-rvc")
+
             if cls.is_baremetal() or cls.is_rtems():
                 # Both RTEMS and baremetal FreeRTOS are linked above 0x80000000
                 result.append("-mcmodel=medium")
