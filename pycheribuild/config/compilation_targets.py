@@ -180,7 +180,7 @@ class _ClangBasedTargetInfo(TargetInfo, metaclass=ABCMeta):
         elif xtarget.is_riscv(include_purecap=True):
             # Note: Baremetal/FreeRTOS currently only supports softfloat
             if softfloat is None:
-                softfloat = cls.is_baremetal()  # assume softfloat for baremetal
+                softfloat = cls.is_baremetal() and not config.riscv_baremetal_hardfloat
             # Use the insane RISC-V arch string to enable CHERI
             result.append("-march=" + cls.get_riscv_arch_string(xtarget, softfloat=softfloat))
             result.append("-mabi=" + cls.get_riscv_abi(xtarget, softfloat=softfloat))

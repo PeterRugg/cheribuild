@@ -237,6 +237,9 @@ class CheriConfig(ConfigBase):
         self.mips_float_abi = loader.add_option("mips-float-abi", default=MipsFloatAbi.SOFT, type=MipsFloatAbi,
                                                 group=loader.cross_compile_options_group,
                                                 help="The floating point ABI to use for building MIPS+CHERI programs")
+        self.riscv_baremetal_hardfloat = loader.add_bool_option("riscv-baremetal-hardfloat", default=False,
+                                                group=loader.cross_compile_options_group,
+                                                help="Use hard floating point ABI for building CHERI-RISC-V programs")
         self.aarch64_fp_and_simd_options = loader.add_option(
             "aarch64-fp-and-simd-options", default=AArch64FloatSimdOptions.DEFAULT, type=AArch64FloatSimdOptions,
             group=loader.cross_compile_options_group,
