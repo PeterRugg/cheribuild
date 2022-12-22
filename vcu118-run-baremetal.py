@@ -283,6 +283,10 @@ def load_and_start_exe(*, gdb_cmd: Path, openocd_cmd: Path, bios_image: Path,
     #args += ["-ex", "si 5"]  # we need to run the first few instructions to get a valid DTB
     args += ["-ex", "set disassemble-next-line on"]
     args += ["-ex", "load " + shlex.quote(str(Path(bios_image).absolute()))]
+    args += ["-ex", "set $pc = 0xf0000000"]
+    args += ["-ex", "b _off_end"]
+    args += ["-ex", "continue"]
+    args += ["-ex", "info reg"]
     # args += ["-ex", "set $pc=boot"] # Record the entry point to the bios
     print_command(str(gdb_cmd), *args, config=get_global_config())
     if get_global_config().pretend:
@@ -311,7 +315,7 @@ def load_and_start_exe(*, gdb_cmd: Path, openocd_cmd: Path, bios_image: Path,
     load_end_time = datetime.datetime.utcnow()
     print("Finished loading ELF image in ", load_end_time - load_start_time)
     gdb_finish_time = load_end_time
-    gdb.sendline("continue")
+    gdb.expect_exact(["a0"])
 
     serial_conn.program.expect_exact(expected_output, timeout=expected_output_timeout)
     print(serial_conn.program.before.decode('utf-8'))
